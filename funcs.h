@@ -3,24 +3,10 @@
 #include <string.h>
 #include "structs.h"
 
+int AdminMenu(void);
+int CommonUserMenu(char username[]);
 int BootMenu(void);	//Menu de login e terminar
-int EntreAB(int x,int min,int max);
-int SearchUser(struct tagUser users[],int qtdUsers,char username[50+1]);
-int PasswordCheck(char password[],char realPassword[]);
-
-int SearchUser(struct tagUser users[],int qtdUsers,char username[50+1])
-{
-	int i = 0;
-
-	for(i = 0;i < qtdUsers;i++)	//Percorrer todos os usernames
-	{
-		if(strupr(users[i].username) == strupr(username))	//Comparar case insensitive
-		{
-			return i;	//Retorna index do user no campo
-		}
-	}
-	return -1;	//Nao encontrou user
-}
+int EntreAB(int x, int min, int max);
 
 int BootMenu(void)
 {
@@ -30,21 +16,41 @@ int BootMenu(void)
 	puts("1 - Login.");
 	puts("0 - Sair.");
 	puts("=================");
-	scanf("%d",&task);
+	scanf("%d", &task);
 
 	return task;
 }
 
-int EntreAB(int x,int min,int max)
+int AdminMenu(void)
+{
+	int task;
+	printf("=== BEM VINDO ADMINISTRADOR ===\n");
+	puts("1 - Criar User.");
+	puts("2 - Apagar User.");
+	puts("3 - Ler mensagens.");
+	puts("4 - Apagar mensagens.");
+	puts("5 - Enviar mensagem.");
+	puts("0 - Sair.");
+
+	scanf("%d", &task);
+	return task;
+}
+
+int CommonUserMenu(char username[])
+{
+	int task;
+	printf("=== BEM VINDO %s ===\n", username);
+	puts("1 - Ler mensagens.");
+	puts("2 - Apagar mensagens.");
+	puts("3 - Enviar mensagem.");
+	puts("0 - Sair.");
+
+	scanf("%d", &task);
+	return task;
+}
+
+int EntreAB(int x, int min, int max)
 {
 	return x >= min && x <= max;
 }
 
-int PasswordCheck(char password[],char realPassword[])
-{
-	if(strcmp(password,realPassword) == 0)	//Compara case sensitive
-	{
-		return 1;	//Password correta
-	}
-	return 0;	//Password nao esta correta
-}
