@@ -9,10 +9,10 @@
 
 int main()
 {
-	struct tagUser* users = malloc(MAX_USERS * sizeof(struct tagUser));
-	//struct tagUser users[MAX_USERS] = { "sa","System Administrator","sa" };	//User admin guardado na posicao 0
-	int qtdUsers = 1;;
-
+	struct tagUser users[MAX_USERS] = { "sa","System Administrator","sa" };	//User admin guardado na posicao 0
+	int qtdUsers = 1;	//Começa a 1 pois já existe o user admin
+	struct tagMensagem mensagens[MAX_MSG];
+	int qtdMensagem = 0;
 	/*Variaveis de Menu*/
 	int bootTask = -1;
 	int adminTask = 0;
@@ -21,11 +21,6 @@ int main()
 	/**/
 	char usernameLogin[50 + 1], passwordLogin[50 + 1];
 	int loginIndex = 0, loggedIn = 0;
-
-	if (users == NULL)
-		puts("Erro ao alocar memoria!");
-
-	//users[0]  = (struct tagUser) {"sa","System Administrator","sa"};
 
 	while (1)
 	{
@@ -37,6 +32,8 @@ int main()
 			if (EntreAB(bootTask, 0, 1) == 0)
 			{
 				puts("Selecione uma opcao valida!");
+				system("pause");
+				system("cls");
 			}
 		} while (EntreAB(bootTask, 0, 1) == 0);
 
@@ -64,21 +61,23 @@ int main()
 					printf("Indique a password de %s: ", usernameLogin);
 					scanf("%s", passwordLogin);
 
-					if (PasswordCheck(passwordLogin, users[loginIndex].password) == 0)
-					{
-						puts("Password incorreta!");
-					}
-					else if (strcmp("quit", passwordLogin) == 0)
+					if (strcmp("quit", passwordLogin) == 0)	//User digitou quit para sair da acao de login
 					{
 						puts("Saindo..");
 						loggedIn = 0;
 						break;
 					}
-					else if (PasswordCheck(passwordLogin, users[loginIndex].password) == 1)
+					else if (PasswordCheck(passwordLogin, users[loginIndex].password) == 0)	//Password incorreta
 					{
-						loggedIn = 1;
+						puts("Password incorreta!");
+						system("pause");
+						system("cls");
 					}
-				} while (PasswordCheck(passwordLogin, users[loginIndex].password) == 0);
+					else if (PasswordCheck(passwordLogin, users[loginIndex].password) == 1)	//Password está correta
+					{
+						loggedIn = 1;	//Sinalizador de que o user está "logado" na conta neste momento
+					}
+				} while (PasswordCheck(passwordLogin, users[loginIndex].password) == 0 && strcmp("quit",passwordLogin) != 0);
 
 			}
 		}	//Login task
@@ -91,22 +90,27 @@ int main()
 				do	//Ciclo menu do admin
 				{
 					adminTask = AdminMenu();
-					puts("nigga");
 					switch (adminTask)
 					{
-					case 1:
+					case 1:	//Criar user
 						break;
-					case 2:
+					case 2:	//Apagar User
 						break;
-					case 3:
+					case 3:	//Ler mensagens
 						break;
-					case 4:
+					case 4:	//Apagar mensagens
 						break;
-					case 5:
+					case 5:	//Enviar mensagens
 						break;
+					case 0:	//Sair
+						puts("Saindo...");
+						break;
+					default:
+						printf("Introduza uma opcao valida!\n");
 					}
-
-				} while (EntreAB(adminTask,0,5) == 0);
+					system("pause");
+					system("cls");
+				} while (adminTask != 0);
 
 			}
 			else	//Outro user
@@ -126,8 +130,7 @@ int main()
 
 		}
 
-
-		system("pause");
+		system("pause");	//STACK OVERFLOW
 		system("cls");
 
 	}	//Ciclo infinito
