@@ -20,19 +20,18 @@ struct tagDataHora {
 };
 
 struct tagMensagem {
-	char userOrigem[50 + 1];
-	char userDestino[50 + 1];
-	struct tagDataHora dataHora;
-	char assunto[50 + 1];
-	char corpoMensagem[50 + 1];
+	char userOrigem[50 + 1];	//Nome de user que enviou mensagem
+	char userDestino[50 + 1];	//Nome de quem irá receber a mensagem
+	struct tagDataHora dataHora;	//Contem ano mes dia hora minuto
+	char assunto[70];	//Assunto da mensagem
+	char corpoMensagem[300];	//Corpo da mensagem
+	int lida;	//Se mensagem está lida ou nao
 };
 
 struct tagUser {
-	char username[50 + 1];
-	char nome[50 + 1];
-	char password[50 + 1];
-	int qtdMsg;
-	int msgNaoLidas;
-	struct tagMensagem mensagens[MAX_MSG];
+	char username[50 + 1];	//Nome do user para outros users
+	char nome[50 + 1];	//Nome real do utilizador
+	char password[50 + 1];	//Password da conta
+	int msgNaoLidas;	//Quantidade de mensagens nao lidas
 };
 
