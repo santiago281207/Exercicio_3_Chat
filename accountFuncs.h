@@ -7,6 +7,7 @@
 
 int SearchUser(struct tagUser users[], int qtdUsers, char username[50 + 1]);
 int PasswordCheck(char password[], char realPassword[]);
+int UserCheck(struct tagUser users[],int qtdUsers,char username[50+1]);
 
 int PasswordCheck(char password[], char realPassword[])
 {
@@ -36,4 +37,18 @@ int SearchUser(struct tagUser users[], int qtdUsers, char username[50 + 1])
 		}
 	}
 	return -1;	//Nao encontrou user
+}
+
+int UserCheck(struct tagUser users[],int qtdUsers,char username[50+1])
+{
+	int i = 0;
+
+	for(i = 0;i < qtdUsers;i++)
+	{
+		if(strcmp(users[i].username,username) == 0)
+		{
+			return 0;	//User existe
+		}
+	}
+	return 1;	//User nao existe esta disponivel
 }
