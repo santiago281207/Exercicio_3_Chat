@@ -9,7 +9,7 @@
 
 int main()
 {
-	static struct tagUser users[MAX_USERS] = { "sa","System Administrator","sa" };	//User admin guardado na posicao 0
+	struct tagUser users[MAX_USERS] = { "sa","System Administrator","sa" };	//User admin guardado na posicao 0
 	int qtdUsers = 1;	//Começa a 1 pois já existe o user admin
 	struct tagMensagem mensagens[MAX_MSG];
 	int qtdMensagem = 0;
@@ -21,7 +21,7 @@ int main()
 	/**/
 	char usernameLogin[50 + 1], passwordLogin[50 + 1];
 	int loginIndex = 0, loggedIn = 0;
-	int passCheck = 0;
+	int passCheck = 0,userCheck = 0;
 
 	while (1)
 	{
@@ -128,7 +128,7 @@ int main()
 					{
 						loggedIn = 1;	//Sinalizador de que o user está "logado" na conta neste momento
 					}
-				} while (passCheck != 0);
+				} while (passCheck == 0);
 
 			}
 		}	//Login task
@@ -144,6 +144,39 @@ int main()
 					switch (adminTask)
 					{
 					case 1:	//Criar user
+						if(qtdUsers == 50)
+						{
+							printf("Maxima quantidade de users atingidos!\n");
+						}else
+						{
+							do	//Username de novo user
+							{
+								puts("Digite 'quit' para sair!");
+								printf("Indique o username: ");
+								scanf("%s",users[qtdUsers].username);
+
+								userCheck = UserCheck(users,qtdUsers,users[qtdUsers].username);
+
+								if(userCheck == 0)
+								{
+									puts("Username ja existe!");
+								}else if(strcmp("quit",users[qtdUsers].username) == 0)
+								{
+									puts("Saindo...");
+								}
+							}while(userCheck == 0 && strcmp("quit",users[qtdUsers].username) != 0);
+
+							//Nome de user
+
+							printf("Indique nome user: ");
+							scanf("%s",users[qtdUsers].nome);
+
+							//Password de user novo
+							do
+							{
+
+							}while();
+						}
 						system("pause");
 						system("cls");
 						break;
