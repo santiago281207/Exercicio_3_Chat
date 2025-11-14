@@ -34,4 +34,3 @@ struct tagUser {
 	char password[50 + 1];	//Password da conta
 	int msgNaoLidas;	//Quantidade de mensagens nao lidas
 };
-
