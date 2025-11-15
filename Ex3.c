@@ -228,9 +228,10 @@ int main()
 		userTask = 0;
 		loggedIn = 0;
 		loginIndex = -1;
-		system("pause");
+		system("pause");	//STACK OVERFLOW
 		system("cls");
 	}	//Ciclo infinito
 
 	return 0;
 } //main
+
