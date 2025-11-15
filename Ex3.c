@@ -13,6 +13,7 @@ int main()
 	int qtdUsers = 1;	//Começa a 1 pois já existe o user admin
 	struct tagMensagem mensagens[MAX_MSG];
 	int qtdMensagem = 0;
+
 	/*Variaveis de Menu*/
 	int bootTask = -1;
 	int adminTask = 0;
@@ -22,6 +23,8 @@ int main()
 	char usernameLogin[50 + 1], passwordLogin[50 + 1];
 	int loginIndex = 0, loggedIn = 0;
 	int passCheck = 0,userCheck = 0;
+	int quitCheckLogin = -1,quitCheckNew = -1;
+	int passStrenght = -1;
 
 	while (1)
 	{
@@ -50,7 +53,7 @@ int main()
 			{
 				puts("Username nao existe!");
 			}
-			else
+			else	//User existe
 			{
 				do
 				{
@@ -60,8 +63,9 @@ int main()
 					passwordLogin[50] = '\0';
 
 					passCheck = PasswordCheck(passwordLogin, users[loginIndex].password);
+					quitCheckLogin = strcmp("quit", passwordLogin);
 
-					if (strcmp("quit", passwordLogin) == 0)	//User digitou quit para sair da acao de login
+					if (quitCheckLogin == 0)	//User digitou quit para sair da acao de login
 					{
 						puts("Saindo..");
 						break;
@@ -76,14 +80,14 @@ int main()
 					{
 						loggedIn = 1;	//Sinalizador de que o user está "logado" na conta neste momento
 					}
-				} while (passCheck != 0);
+				} while (passCheck == 0);
 			}
-			if (loggedIn == 1 && loginIndex == 0 && strcmp("quit", passwordLogin) != 0)
+			if (loggedIn == 1 && loginIndex == 0 && quitCheckLogin != 0)
 			{
 				puts("Terminando programa...");
 				break;
 			}
-			else if(loggedIn == 1 && loginIndex != 0 && strcmp("quit", passwordLogin) != 0)
+			else if(loggedIn == 1 && loginIndex != 0 && quitCheckLogin != 0)
 			{
 				puts("Apenas administrador pode terminar o programa!");
 			}
@@ -154,32 +158,64 @@ int main()
 								puts("Digite 'quit' para sair!");
 								printf("Indique o username: ");
 								scanf("%s",users[qtdUsers].username);
+								users[qtdUsers].username[50] = '\0';
 
-								userCheck = UserCheck(users,qtdUsers,users[qtdUsers].username);
+								userCheck = SearchUser(users,qtdUsers,users[qtdUsers].username);	//Verificar se nome já existe
+								quitCheckNew = strcmp("quit",users[qtdUsers].username);	//Verificar se é para sair
 
-								if(userCheck == 0)
+								if(userCheck != -1)
 								{
 									puts("Username ja existe!");
-								}else if(strcmp("quit",users[qtdUsers].username) == 0)
+								}else if(quitCheckNew == 0)
 								{
 									puts("Saindo...");
 								}
-							}while(userCheck == 0 && strcmp("quit",users[qtdUsers].username) != 0);
+							}while(userCheck != -1 && quitCheckNew != 0);
 
 							//Nome de user
-
-							printf("Indique nome user: ");
-							scanf("%s",users[qtdUsers].nome);
-
-							//Password de user novo
-							do
+							if(quitCheckNew == 0)	//Se user quiser sair
 							{
+								break;
+							}else	//User nao quer sair
+							{
+								printf("Indique nome user: ");
+								scanf("%s",users[qtdUsers].nome);
+								users[qtdUsers].nome[50] = '\0';
+								getchar();
+								
+								//Password de user novo
+							 	do	
+							 	{
+									puts("Password precisa ter pelo menos 7 caracteres;");
+									puts("---------------------------------------------");
+									puts("Password precisa ter pelo menos 2 simbolos;");
+									puts("---------------------------------------------");
+									puts("Password precisa ter pelo menos 2 maisuculas;");
+									puts("---------------------------------------------");
+									puts("Password precisa ter pelo menos 2 minusculas;");
+									puts("---------------------------------------------");
+									puts("Password precisa ter pelo menos 2 numeros;");
+									puts("---------------------------------------------");
+									printf("Indique a sua password: ");
+									gets(users[qtdUsers].password);
+									users[qtdUsers].password[50] = '\0';
+	
+									passStrenght = StrongPass(users[qtdUsers].password);
 
-							}while();
+									if(passStrenght != 1)
+									{
+										printf("Password muito fraca, tente novamente!\n");
+									}
+								}while(passStrenght != 1);
+
+								printf("Conta de %s criada com sucesso!\n",users[qtdUsers].username);
+							}
 						}
+						qtdUsers++;
 						system("pause");
 						system("cls");
-						break;
+						break;	//Acabar de criar user
+
 					case 2:	//Apagar User
 						system("pause");
 						system("cls");
@@ -228,7 +264,7 @@ int main()
 		userTask = 0;
 		loggedIn = 0;
 		loginIndex = -1;
-		system("pause");	//STACK OVERFLOW
+		system("pause");
 		system("cls");
 	}	//Ciclo infinito
 

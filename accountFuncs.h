@@ -5,9 +5,9 @@
 #include "structs.h"
 #include "consts.h"
 
-int SearchUser(struct tagUser users[], int qtdUsers, char username[50 + 1]);
+int SearchUser(struct tagUser users[], int qtdUsers, char username[]);
 int PasswordCheck(char password[], char realPassword[]);
-int UserCheck(struct tagUser users[],int qtdUsers,char username[50+1]);
+int StrongPass(char password[]);
 
 int PasswordCheck(char password[], char realPassword[])
 {
@@ -39,16 +39,32 @@ int SearchUser(struct tagUser users[], int qtdUsers, char username[50 + 1])
 	return -1;	//Nao encontrou user
 }
 
-int UserCheck(struct tagUser users[],int qtdUsers,char username[50+1])
+int StrongPass(char password[])
 {
-	int i = 0;
+	int qtdChars = 0;
+	int qtdSymbol = 0;
+	int qtdNum = 0;
+	int qtdUp = 0;
+	int qtdLower = 0;
 
-	for(i = 0;i < qtdUsers;i++)
+	for(qtdChars = 0;password[qtdChars] != '\0';qtdChars++)
 	{
-		if(strcmp(users[i].username,username) == 0)
+		if(password[qtdChars] <= 47 || password[qtdChars] >= 58 && password[qtdChars] <= 64 || password[qtdChars] >= 91 && password[qtdChars] <= 96)
 		{
-			return 0;	//User existe
+			qtdSymbol++;
+		}else if(password[qtdChars] >= '0' && password[qtdChars] <= '9')
+		{
+			qtdNum++;
+		}else if(password[qtdChars] >= 'a' && password[qtdChars] <= 'z')
+		{
+			qtdLower++;
+		}else if(password[qtdChars] >= 'A' && password[qtdChars] <= 'Z')
+		{
+			qtdUp++;
 		}
 	}
-	return 1;	//User nao existe esta disponivel
+
+	if(qtdChars >= 7 && qtdLower >= 2 && qtdNum >= 2 && qtdSymbol >= 2 && qtdUp >= 2)
+		return 1;	//Password forte
+	return 0;	//Password fraca
 }
