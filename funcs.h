@@ -7,6 +7,7 @@ int AdminMenu(void);
 int CommonUserMenu(char username[]);
 int BootMenu(void);	//Menu de login e terminar
 int EntreAB(int x, int min, int max);
+int StringCompareCI(char str1[],char str2[]);
 
 int BootMenu(void)
 {
@@ -52,4 +53,18 @@ int CommonUserMenu(char username[])
 int EntreAB(int x, int min, int max)
 {
 	return x >= min && x <= max;
+}
+
+int StringCompareCI(char str1[],char str2[])
+{
+	char aux1[50+1];
+	char aux2[50+1];
+
+	strcpy(aux1,str1);
+	strcpy(aux2,str2);
+
+	strupr(aux1);
+	strupr(aux2);
+
+	return strcmp(aux1,aux2);
 }

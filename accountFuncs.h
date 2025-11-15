@@ -5,9 +5,12 @@
 #include "structs.h"
 #include "consts.h"
 
-int SearchUser(struct tagUser users[], int qtdUsers, char username[]);
-int PasswordCheck(char password[], char realPassword[]);
-int StrongPass(char password[]);
+int SearchUser(struct tagUser users[], int qtdUsers, char username[]);	//Retorna posicao do utilizador com nome igual a username. senao retorna -1
+int PasswordCheck(char password[], char realPassword[]);	//Verifica se password é igual
+int StrongPass(char password[]);	//Verifica o quao forter password é
+void DelUser(struct tagUser users[],int qtdUsers,int indexUser);
+int DelMessages(struct tagMensagem mensagens[],int qtdMensagens,char username[]);
+void AuxDelMessages(struct tagMensagem mensagens[],int qtdMensagens,int delIndex);
 
 int PasswordCheck(char password[], char realPassword[])
 {
@@ -18,20 +21,14 @@ int PasswordCheck(char password[], char realPassword[])
 	return 0;	//Password nao esta correta
 }
 
-int SearchUser(struct tagUser users[], int qtdUsers, char username[50 + 1])
+
+int SearchUser(struct tagUser users[], int qtdUsers, char username[])
 {
 	int i = 0;
-	char aux1[50 + 1],aux2[50+1];
-
-	strcpy(aux2, username);
-	_strupr(aux2);
 
 	for (i = 0;i < qtdUsers;i++)	//Percorrer todos os usernames
 	{
-		strcpy(aux1, users[i].username);
-		_strupr(aux1);
-
-		if (strcmp(aux1,aux2) == 0)	//Comparar case insensitive
+		if (StringCompareCI(users[i].username,username) == 0)	//Comparar case insensitive
 		{
 			return i;	//Retorna index do user no campo
 		}
@@ -67,4 +64,40 @@ int StrongPass(char password[])
 	if(qtdChars >= 7 && qtdLower >= 2 && qtdNum >= 2 && qtdSymbol >= 2 && qtdUp >= 2)
 		return 1;	//Password forte
 	return 0;	//Password fraca
+}
+
+void DelUser(struct tagUser users[],int qtdUsers,int indexUser)
+{
+	//Puxa todas as posicoes aseguir a indexUser uma posicao para tras
+	int i = indexUser;
+
+	for(;i < qtdUsers-1;i++)
+	{
+		users[i] = users[i+1];
+	}
+}
+
+int DelMessages(struct tagMensagem mensagens[],int qtdMensagens,char username[])
+{
+	int i = 0;
+
+	for(i = 0;i < qtdMensagens;i++)
+	{
+		if(StringCompareCI(mensagens[i].userOrigem,username) == 0)
+		{
+			AuxDelMessages(mensagens,qtdMensagens,i);
+			qtdMensagens--;
+			i = 0;
+		}
+	}
+}
+
+void AuxDelMessages(struct tagMensagem mensagens[],int qtdMensagens,int delIndex)
+{
+	int i = delIndex;
+
+	for(;i < qtdMensagens - 1;i++)
+	{
+		mensagens[i] = mensagens[i+1];
+	}
 }
