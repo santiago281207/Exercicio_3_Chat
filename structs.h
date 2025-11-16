@@ -32,5 +32,6 @@ struct tagUser {
 	char username[50 + 1];	//Nome do user para outros users
 	char nome[50 + 1];	//Nome real do utilizador
 	char password[50 + 1];	//Password da conta
+	int qtdMsgTotal;	//Quantidade de mensagens que teem o nome do user como destino
 	int msgNaoLidas;	//Quantidade de mensagens nao lidas
 };
