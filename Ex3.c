@@ -35,6 +35,7 @@ int main()
 	int passStrenght = -1;
 	int delIndex = -1, destinoIndex = -1;
 	int i = 0;
+	int msgApagadasCount = 0;
 
 	while (1)
 	{
@@ -152,6 +153,7 @@ int main()
 		{
 			if (loginIndex == 0) // System administrator
 			{
+				system("cls");
 				do // Ciclo menu do admin
 				{
 					printf("Voce tem %d mensagens nao lidas!\n", users[loginIndex].msgNaoLidas);
@@ -345,11 +347,14 @@ int main()
 									DelMensagensLidas(mensagens, qtdMensagem, userMessagesIndex[i]);
 									users[loginIndex].qtdMsgTotal--;
 									i--;
+									msgApagadasCount++;
 								}
 							}
+							printf("Foram apagadas %d mensagens!\n",msgApagadasCount);
 						}
 						system("pause");
 						system("cls");
+						msgApagadasCount = 0;
 						break;
 					case 5: // Enviar mensagens
 
@@ -381,8 +386,6 @@ int main()
 							gets(mensagens[qtdMensagem].assunto);
 							mensagens[qtdMensagem].assunto[50] = '\0';
 
-							getchar();
-
 							puts("Corpo da mensagem:");
 							gets(mensagens[qtdMensagem].corpoMensagem);
 
@@ -404,7 +407,6 @@ int main()
 							users[destinoIndex].msgNaoLidas++;
 							qtdMensagem++;
 						}
-
 						system("pause");
 						system("cls");
 						break;
@@ -419,6 +421,7 @@ int main()
 			}
 			else // Outro user
 			{
+				system("cls");
 				do // Ciclo de um user normal
 				{
 					printf("Voce tem %d mensagens nao lidas!\n", users[loginIndex].msgNaoLidas);
@@ -456,7 +459,7 @@ int main()
 
 								printf("Introduza '>' para ir para proxima mensagem ou '<' para ir para mensagem anterior...\n");
 								messagesKey = getchar();
-								
+
 								if (tolower(messagesKey) == 'q')
 								{
 									puts("Saindo...");
@@ -464,7 +467,7 @@ int main()
 								}
 								else if (messagesKey == '>') // Proxima mensagem
 								{
-									if(i == users[loginIndex].qtdMsgTotal)
+									if(i+1 == users[loginIndex].qtdMsgTotal)
 									{
 										puts("Chegou ao fim das mensagens!");
 									}else if(i > 0)
@@ -480,6 +483,7 @@ int main()
 								}
 								system("pause");
 								system("cls");
+								fflush(stdin);
 							}
 						}
 						system("pause");
@@ -501,11 +505,14 @@ int main()
 									DelMensagensLidas(mensagens, qtdMensagem, userMessagesIndex[i]);
 									users[loginIndex].qtdMsgTotal--;
 									i--;
+									msgApagadasCount++;
 								}
 							}
+							printf("Foram apagadas %d mensagens!\n",msgApagadasCount);
 						}
 						system("pause");
 						system("cls");
+						msgApagadasCount = 0;
 						break;
 					case 3: // Enviar mensagens
 
@@ -536,8 +543,6 @@ int main()
 							puts("Indique o assunto da mensagem:");
 							gets(mensagens[qtdMensagem].assunto);
 							mensagens[qtdMensagem].assunto[50] = '\0';
-
-							getchar();
 
 							puts("Corpo da mensagem:");
 							gets(mensagens[qtdMensagem].corpoMensagem);
@@ -574,6 +579,7 @@ int main()
 		loggedIn = 0;
 		loginIndex = -1;
 		i = 0;
+		msgApagadasCount = 0;
 		system("pause");
 		system("cls");
 	} // Ciclo infinito
