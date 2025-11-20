@@ -10,13 +10,14 @@
 #include "funcs.h"
 #include "accountFuncs.h"
 
+struct tagUser users[MAX_USERS] = {"sa", "System Administrator", "sa"}; // User admin guardado na posicao 0
+struct tagMensagem mensagens[MAX_MSG];
+
 int main()
 {
 	time_t atual;
 	struct tm *dados;
-	struct tagUser users[MAX_USERS] = {"sa", "System Administrator", "sa"}; // User admin guardado na posicao 0
 	int qtdUsers = 1;														// Começa a 1 pois já existe o user admin
-	struct tagMensagem mensagens[MAX_MSG];
 	int qtdMensagem = 0;
 	int userMessagesIndex[MAX_MSG];
 
@@ -199,7 +200,7 @@ int main()
 								printf("Indique nome user: ");
 								gets(users[qtdUsers].nome);
 								users[qtdUsers].nome[50] = '\0';
-
+								puts("");
 								// Password de user novo
 								do
 								{
@@ -227,12 +228,44 @@ int main()
 
 								printf("Conta de %s criada com sucesso!\n", users[qtdUsers].username);
 							}
+						
+						
+						if (qtdMensagem == MAX_MSG - 1)
+						{
+							puts("Limite maximo de mensagens atigindo!");
 						}
+						else
+						{
+							strcpy(mensagens[qtdMensagem].userOrigem,"Sistema");
+							strcpy(mensagens[qtdMensagem].userDestino, users[qtdUsers].username); // Colcoar username destinatario
+
+							strcpy(mensagens[qtdMensagem].assunto,"Boas vindas ao chat");
+							strcpy(mensagens[qtdMensagem].corpoMensagem,"Seja bem vindo a este grupo chat de trabalho.\nAqui pode enviar mensagens para os seus colegas de trabalho em turnos diferentes.");
+							mensagens[qtdMensagem].lida = 0;										  // Nao foi lida
+
+							time(&atual);			   // Obter tempo em segundos
+							dados = localtime(&atual); // Converter valor para dados organizados "struct tm"
+
+							mensagens[qtdMensagem].dataHora.data.dia = dados->tm_mday;
+							mensagens[qtdMensagem].dataHora.data.mes = dados->tm_mon + 1;	  // Mes de 0 a 11 por isso +1
+							mensagens[qtdMensagem].dataHora.data.ano = dados->tm_year + 1900; // Da os anos desde 1900 por isso adiciona se 1900
+							mensagens[qtdMensagem].dataHora.horario.hora = dados->tm_hour;
+							mensagens[qtdMensagem].dataHora.horario.minuto = dados->tm_min;
+							mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
+
+							users[qtdUsers].qtdMsgTotal++;
+							users[qtdUsers].qtdMsgAuto++;
+							users[qtdUsers].msgNaoLidas++;
+							qtdMensagem++;
+						}
+						
+						
+						}
+
 						qtdUsers++; // Aumentar qtd de users pois foi criado um novo
 						system("pause");
 						system("cls");
 						break; // Acabar de criar user
-
 					case 2:				   // Apagar User
 						if (qtdUsers == 1) // Apenas existe o administrador
 						{
@@ -313,7 +346,7 @@ int main()
 									if(i == users[loginIndex].qtdMsgTotal)
 									{
 										puts("Chegou ao fim das mensagens!");
-									}else if(i > 0)
+									}else if(i >= 0)
 										i++;
 								}
 								else if (messagesKey == '<') // Mensagem anterior
@@ -324,7 +357,6 @@ int main()
 									}else if(i > 0)
 										i--;
 								}
-								system("pause");
 								system("cls");
 							}
 						}
@@ -346,6 +378,14 @@ int main()
 								{
 									DelMensagensLidas(mensagens, qtdMensagem, userMessagesIndex[i]);
 									users[loginIndex].qtdMsgTotal--;
+									if(strcmp(mensagens[userMessagesIndex[i]].userOrigem,"Sistema") == 0)
+									{
+										users[loginIndex].qtdMsgAuto--;
+									}else
+									{
+										users[loginIndex].qtdMsgReal--;
+									}
+									
 									i--;
 									msgApagadasCount++;
 								}
@@ -404,9 +444,11 @@ int main()
 							mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
 
 							users[destinoIndex].qtdMsgTotal++;
+							users[destinoIndex].qtdMsgReal++;
 							users[destinoIndex].msgNaoLidas++;
 							qtdMensagem++;
 						}
+						printf("Mensagem enviada para %s com sucesso!\n",users[destinoIndex].username);
 						system("pause");
 						system("cls");
 						break;
@@ -470,7 +512,8 @@ int main()
 									if(i+1 == users[loginIndex].qtdMsgTotal)
 									{
 										puts("Chegou ao fim das mensagens!");
-									}else if(i > 0)
+										system("pause");
+									}else if(i >= 0)
 										i++;
 								}
 								else if (messagesKey == '<') // Mensagem anterior
@@ -478,12 +521,11 @@ int main()
 									if(i == 0)
 									{
 										puts("Chegou ao inicio das mensagens!");
+										system("pause");
 									}else if(i > 0)
 										i--;
 								}
-								system("pause");
 								system("cls");
-								fflush(stdin);
 							}
 						}
 						system("pause");
@@ -504,6 +546,14 @@ int main()
 								{
 									DelMensagensLidas(mensagens, qtdMensagem, userMessagesIndex[i]);
 									users[loginIndex].qtdMsgTotal--;
+									if(strcmp(mensagens[userMessagesIndex[i]].userOrigem,"Sistema") == 0)
+									{
+										users[loginIndex].qtdMsgAuto--;
+									}else
+									{
+										users[loginIndex].qtdMsgReal--;
+									}
+									
 									i--;
 									msgApagadasCount++;
 								}
@@ -562,9 +612,11 @@ int main()
 							mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
 
 							users[destinoIndex].qtdMsgTotal++;
+							users[destinoIndex].qtdMsgReal++;
 							users[destinoIndex].msgNaoLidas++;
 							qtdMensagem++;
 						}
+						printf("Mensagem enviada para %s com sucesso!\n",users[destinoIndex].username);
 						system("pause");
 						system("cls");
 						break;
