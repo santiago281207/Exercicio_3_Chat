@@ -33,7 +33,7 @@ int main()
 	int loginIndex = 0, loggedIn = 0;
 	int passCheck = 0, userCheck = 0;
 	int quitCheckLogin = -1, quitCheckNew = -1;
-	int passStrenght = -1;
+	int passStrenght = -1,sentIndex;
 	int delIndex = -1, destinoIndex = -1;
 	int i = 0;
 	int msgApagadasCount = 0;
@@ -252,6 +252,7 @@ int main()
 							mensagens[qtdMensagem].dataHora.horario.hora = dados->tm_hour;
 							mensagens[qtdMensagem].dataHora.horario.minuto = dados->tm_min;
 							mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
+							mensagens[qtdMensagem].msgAuto = 1;
 
 							users[qtdUsers].qtdMsgTotal++;
 							users[qtdUsers].qtdMsgAuto++;
@@ -331,6 +332,35 @@ int main()
 								{
 									mensagens[userMessagesIndex[i]].lida = 1;
 									users[loginIndex].msgNaoLidas--;
+
+									if(qtdMensagem < 2000 && mensagens[userMessagesIndex[i]].msgAuto == 0)
+									{
+										sentIndex = SearchUser(users,qtdUsers,mensagens[userMessagesIndex[i]].userOrigem);
+									
+										strcpy(mensagens[qtdMensagem].userOrigem,"Sistema");
+										strcpy(mensagens[qtdMensagem].userDestino, users[sentIndex].username); // Colcoar username destinatario
+										strcpy(mensagens[qtdMensagem].assunto,"A seguinte mensagem foi lida.");
+										strcpy(mensagens[qtdMensagem].corpoMensagem,mensagens[userMessagesIndex[i]].corpoMensagem);					
+										mensagens[qtdMensagem].lida = 0;										  // Nao foi lida
+
+										time(&atual);			   // Obter tempo em segundos
+									
+										dados = localtime(&atual); // Converter valor para dados organizados "struct tm"
+										
+									
+										mensagens[qtdMensagem].dataHora.data.dia = dados->tm_mday;
+										mensagens[qtdMensagem].dataHora.data.mes = dados->tm_mon + 1;	  // Mes de 0 a 11 por isso +1
+										mensagens[qtdMensagem].dataHora.data.ano = dados->tm_year + 1900; // Da os anos desde 1900 por isso adiciona se 1900								
+										mensagens[qtdMensagem].dataHora.horario.hora = dados->tm_hour;
+										mensagens[qtdMensagem].dataHora.horario.minuto = dados->tm_min;
+										mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
+										mensagens[qtdMensagem].msgAuto = 1;
+
+										users[sentIndex].qtdMsgTotal++;
+										users[sentIndex].qtdMsgAuto++;
+										users[sentIndex].msgNaoLidas++;
+										qtdMensagem++;
+									}
 								}
 
 								printf("Introduza '>' para ir para proxima mensagem ou '<' para ir para mensagem anterior...\n");
@@ -447,6 +477,32 @@ int main()
 							users[destinoIndex].qtdMsgReal++;
 							users[destinoIndex].msgNaoLidas++;
 							qtdMensagem++;
+
+							if(users[destinoIndex].qtdMsgTotal >= 25 && qtdMensagem < 2000)
+							{
+								strcpy(mensagens[qtdMensagem].userOrigem,"Sistema");
+								strcpy(mensagens[qtdMensagem].userDestino, users[qtdUsers].username); // Colcoar username destinatario
+
+								strcpy(mensagens[qtdMensagem].assunto,"25 mensagens");
+								strcpy(mensagens[qtdMensagem].corpoMensagem,"Ja tem mais de 25 mensagens acumuladas. Considere em apagar mensagens.");
+								mensagens[qtdMensagem].lida = 0;										  // Nao foi lida
+
+								time(&atual);			   // Obter tempo em segundos
+								dados = localtime(&atual); // Converter valor para dados organizados "struct tm"
+
+								mensagens[qtdMensagem].dataHora.data.dia = dados->tm_mday;
+								mensagens[qtdMensagem].dataHora.data.mes = dados->tm_mon + 1;	  // Mes de 0 a 11 por isso +1
+								mensagens[qtdMensagem].dataHora.data.ano = dados->tm_year + 1900; // Da os anos desde 1900 por isso adiciona se 1900
+								mensagens[qtdMensagem].dataHora.horario.hora = dados->tm_hour;
+								mensagens[qtdMensagem].dataHora.horario.minuto = dados->tm_min;
+								mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
+								mensagens[qtdMensagem].msgAuto = 1;
+
+								users[destinoIndex].qtdMsgTotal++;
+								users[destinoIndex].qtdMsgAuto++;
+								users[destinoIndex].msgNaoLidas++;
+								qtdMensagem++;
+							}
 						}
 						printf("Mensagem enviada para %s com sucesso!\n",users[destinoIndex].username);
 						system("pause");
@@ -480,6 +536,7 @@ int main()
 						{
 							system("cls");
 							SearchMessages(mensagens, qtdMensagem, users[loginIndex].username, userMessagesIndex);
+
 							for (i = 0; i < users[loginIndex].qtdMsgTotal;)
 							{
 								puts("=== LENDO MENSAGENS ===");
@@ -497,6 +554,35 @@ int main()
 								{
 									mensagens[userMessagesIndex[i]].lida = 1;
 									users[loginIndex].msgNaoLidas--;
+
+									if(qtdMensagem < 2000 && mensagens[userMessagesIndex[i]].msgAuto == 0)
+									{
+										sentIndex = SearchUser(users,qtdUsers,mensagens[userMessagesIndex[i]].userOrigem);
+									
+										strcpy(mensagens[qtdMensagem].userOrigem,"Sistema");
+										strcpy(mensagens[qtdMensagem].userDestino, users[sentIndex].username); // Colcoar username destinatario
+										strcpy(mensagens[qtdMensagem].assunto,"A seguinte mensagem foi lida.");
+										strcpy(mensagens[qtdMensagem].corpoMensagem,mensagens[userMessagesIndex[i]].corpoMensagem);					
+										mensagens[qtdMensagem].lida = 0;										  // Nao foi lida
+
+										time(&atual);			   // Obter tempo em segundos
+									
+										dados = localtime(&atual); // Converter valor para dados organizados "struct tm"
+										
+									
+										mensagens[qtdMensagem].dataHora.data.dia = dados->tm_mday;
+										mensagens[qtdMensagem].dataHora.data.mes = dados->tm_mon + 1;	  // Mes de 0 a 11 por isso +1
+										mensagens[qtdMensagem].dataHora.data.ano = dados->tm_year + 1900; // Da os anos desde 1900 por isso adiciona se 1900								
+										mensagens[qtdMensagem].dataHora.horario.hora = dados->tm_hour;
+										mensagens[qtdMensagem].dataHora.horario.minuto = dados->tm_min;
+										mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
+										mensagens[userMessagesIndex[i]].msgAuto = 1;
+
+										users[sentIndex].qtdMsgTotal++;
+										users[sentIndex].qtdMsgAuto++;
+										users[sentIndex].msgNaoLidas++;
+										qtdMensagem++;
+									}
 								}
 
 								printf("Introduza '>' para ir para proxima mensagem ou '<' para ir para mensagem anterior...\n");
@@ -610,11 +696,38 @@ int main()
 							mensagens[qtdMensagem].dataHora.horario.hora = dados->tm_hour;
 							mensagens[qtdMensagem].dataHora.horario.minuto = dados->tm_min;
 							mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
+							mensagens[qtdMensagem].msgAuto = 0;
 
 							users[destinoIndex].qtdMsgTotal++;
 							users[destinoIndex].qtdMsgReal++;
 							users[destinoIndex].msgNaoLidas++;
 							qtdMensagem++;
+
+							if(users[destinoIndex].qtdMsgTotal >= 25 && qtdMensagem < 2000)
+							{
+								strcpy(mensagens[qtdMensagem].userOrigem,"Sistema");
+								strcpy(mensagens[qtdMensagem].userDestino, users[qtdUsers].username); // Colcoar username destinatario
+
+								strcpy(mensagens[qtdMensagem].assunto,"25 mensagens");
+								strcpy(mensagens[qtdMensagem].corpoMensagem,"Ja tem mais de 25 mensagens acumuladas. Considere em apagar mensagens.");
+								mensagens[qtdMensagem].lida = 0;										  // Nao foi lida
+
+								time(&atual);			   // Obter tempo em segundos
+								dados = localtime(&atual); // Converter valor para dados organizados "struct tm"
+
+								mensagens[qtdMensagem].dataHora.data.dia = dados->tm_mday;
+								mensagens[qtdMensagem].dataHora.data.mes = dados->tm_mon + 1;	  // Mes de 0 a 11 por isso +1
+								mensagens[qtdMensagem].dataHora.data.ano = dados->tm_year + 1900; // Da os anos desde 1900 por isso adiciona se 1900
+								mensagens[qtdMensagem].dataHora.horario.hora = dados->tm_hour;
+								mensagens[qtdMensagem].dataHora.horario.minuto = dados->tm_min;
+								mensagens[qtdMensagem].dataHora.horario.segundo = dados->tm_sec;
+								mensagens[qtdMensagem].msgAuto = 1;
+
+								users[destinoIndex].qtdMsgTotal++;
+								users[destinoIndex].qtdMsgAuto++;
+								users[destinoIndex].msgNaoLidas++;
+								qtdMensagem++;
+							}
 						}
 						printf("Mensagem enviada para %s com sucesso!\n",users[destinoIndex].username);
 						system("pause");
