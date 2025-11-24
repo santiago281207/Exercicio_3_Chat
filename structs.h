@@ -25,6 +25,7 @@ struct tagMensagem {
 	struct tagDataHora dataHora;	//Contem ano mes dia hora minuto
 	char assunto[70];	//Assunto da mensagem
 	char corpoMensagem[300];	//Corpo da mensagem
+	int msgAuto;
 	int lida;	//Se mensagem está lida ou nao
 };
 
