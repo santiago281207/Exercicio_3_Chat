@@ -24,6 +24,7 @@ void DelMensagensLidas(struct tagMensagem mensagens[],int qtdMensagens,int index
 int SearchUser(struct tagUser users[], int qtdUsers, char username[])
 {
 	int i = 0;
+	
 
 	for (i = 0;i < qtdUsers;i++)	//Percorrer todos os usernames
 	{
